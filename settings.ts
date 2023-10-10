@@ -30,7 +30,7 @@ export default class PandocPluginSettingTab extends PluginSettingTab {
 
         const createError = (text: string) =>
             containerEl.createEl('p', { cls: 'pandoc-plugin-error', text });
-        
+
         for (const binary in this.plugin.features) {
             const path = this.plugin.features[binary];
             if (path === undefined) {
@@ -73,12 +73,13 @@ export default class PandocPluginSettingTab extends PluginSettingTab {
                 .addOptions({
                     "text": "Turn into text",
                     "link": "Leave as links",
+                    "embed": "Embed links as bookmarked appendix sections (experimental)",
                     "strip": "Remove links",
                     "unchanged": "Leave unchanged",
                 })
                 .setValue(this.plugin.settings.linkStrippingBehaviour)
                 .onChange(async (value: string) => {
-                    this.plugin.settings.linkStrippingBehaviour = value as 'strip' | 'text' | 'link' | 'unchanged';
+                    this.plugin.settings.linkStrippingBehaviour = value as 'embed' | 'strip' | 'text' | 'link' | 'unchanged';
                     await this.plugin.saveSettings();
                 }));
 

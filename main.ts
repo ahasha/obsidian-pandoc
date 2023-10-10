@@ -97,8 +97,33 @@ export default class PandocPlugin extends Plugin {
         if (this.settings.outputFolder) {
             outputFile = path.join(this.settings.outputFolder, path.basename(outputFile));
         }
-        const view = this.app.workspace.getActiveViewOfType(MarkdownView);
-        
+        let view = this.app.workspace.getActiveViewOfType(MarkdownView);
+
+        if (this.settings.linkStrippingBehaviour == 'embed') {
+            console.log("Embedding links...")
+            // Iterate over outbound links of the inputFile and append the markdown file of each to the end of the markdowd stored in memory
+            const links = this.app.metadataCache.getFileCache(this.app.workspace.getActiveFile()).links;
+            for (let link of links) {
+                console.log(link)
+                if (link.link.includes("http")) {
+                    continue;
+                }
+                const linkFile = this.app.metadataCache.getFirstLinkpathDest(link.link, inputFile);
+                if (linkFile) {
+                    console.log(linkFile);
+                    const linkFileContents = await this.app.vault.read(linkFile);
+                    console.log(linkFileContents)
+                    // Update the markdown in memory
+                    view.data = view.data + "\n\n" + linkFileContents;
+                    console.log(view.data);
+                }
+            }
+            console.log(view.data);
+            const transformed_page_contents = view.data.replace(/\[\[(.*?)\]\]/g, "[[#$1 | $1]]")
+            console.log(transformed_page_contents);
+            view.data = transformed_page_contents;
+        }
+
         try {
             let error, command;
 

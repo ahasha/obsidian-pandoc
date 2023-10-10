@@ -17,7 +17,7 @@ export interface PandocPluginSettings {
     // Do we want to display the YAML frontmatter in the output?
     displayYAMLFrontmatter: boolean,
     // Do we strip [[wikilinks]] entirely, turn them into normal text, or leave them as links, or leave them as raw [[wikilinks]]?
-    linkStrippingBehaviour: 'strip' | 'text' | 'link' | 'unchanged',
+    linkStrippingBehaviour: 'embed' | 'strip' | 'text' | 'link' | 'unchanged',
     // Do we render SVGs at 2x the size?
     highDPIDiagrams: boolean,
     // Custom Pandoc & LaTeX binary paths (useful for PATH variable issues)
